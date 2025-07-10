@@ -93,15 +93,42 @@ export class Home implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      // 1. Pegamos a string completa do ID gerado pelo CDK, ex: "cdk-drop-list-1"
+      const containerId = event.container.id;
+
+      // 2. Extraímos o índice do final da string. ex: "1"
+      const extractedIndexString = containerId.split('-').pop();
+
+      if (!extractedIndexString) {
+        console.error('ERRO: Não foi possível extrair o índice do container:', containerId);
+        return;
+      }
+      
+      // 3. Convertemos o índice para número e SOMAMOS 1 para obter nosso ID real.
+      const extractedIndex = parseInt(extractedIndexString, 10);
+      const newColumnId = extractedIndex + 1; // <<< A CORREÇÃO ESTÁ AQUI!
+
+      const movedCard = event.previousContainer.data[event.previousIndex];
+
+      // 4. Chamamos a API com o ID da coluna CORRETO.
+      this.apiService.updateCard(movedCard.id, { columnId: newColumnId }).subscribe({
+        next: (updatedCard) => {
+          console.log(`SUCESSO: Card ${updatedCard.id} movido para a coluna ${updatedCard.columnId} no backend.`);
+          transferArrayItem(
+            event.previousContainer.data,
+            event.container.data,
+            event.previousIndex,
+            event.currentIndex,
+          );
+        },
+        error: (err) => {
+          console.error('ERRO: Falha ao atualizar a coluna do card no backend:', err);
+          alert('Não foi possível mover o card. A página será recarregada.');
+          window.location.reload();
+        }
+      });
     }
   }
-
   // NENHUMA MUDANÇA na abertura e fechamento dos modais
   openAddCardModal(columnId: string) {
     this.isModalVisible = true;

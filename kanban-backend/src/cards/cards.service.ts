@@ -39,23 +39,29 @@ export class CardsService {
   }
 
   // O update será importante para mover o card de coluna
-  update(id: number, updateCardDto: UpdateCardDto) {
-    const card = this.findOne(id);
+  update(id: number, updateCardDto: UpdateCardDto): Card {
+    // --- INÍCIO DA DEPURAÇÃO ---
+    console.log('--- Backend: Update Card ---');
+    console.log('ID do Card a ser atualizado:', id);
+    console.log('Dados recebidos do frontend (updateCardDto):', updateCardDto);
+    // -----------------------------
 
-    // Atualiza o título se ele for enviado
-    if (updateCardDto.title) {
-        card.title = updateCardDto.title;
-    }
-    // Atualiza a descrição se ela for enviada
-    if (updateCardDto.description) {
-        card.description = updateCardDto.description;
-    }
-    // ATUALIZA A COLUNA se o columnId for enviado (é assim que movemos o card)
-    if (updateCardDto.columnId) {
-        card.columnId = updateCardDto.columnId;
-    }
+    const cardToUpdate = this.findOne(id);
 
-    return card;
+    // --- DEPURAÇÃO ---
+    console.log('Card encontrado no "banco de dados" antes da atualização:', cardToUpdate);
+    // -----------------
+
+    const updatedCard = Object.assign(cardToUpdate, updateCardDto);
+
+    // --- DEPURAÇÃO FINAL ---
+    console.log('Card DEPOIS da atualização (antes de salvar):', updatedCard);
+    // -----------------------
+
+    const cardIndex = this.cards.findIndex(card => card.id === id);
+    this.cards[cardIndex] = updatedCard;
+
+    return updatedCard;
   }
 
   remove(id: number) {

@@ -23,7 +23,10 @@ export class ApiService {
   // Cria um novo card
   createCard(cardData: { title: string, columnId: number, badge: 'low' | 'medium' | 'high' }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/cards`, cardData);
-}
 
+  }
+
+   updateCard(cardId: number, updates: { columnId?: number; title?: string }): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/cards/${cardId}`, updates);}
   
 }
