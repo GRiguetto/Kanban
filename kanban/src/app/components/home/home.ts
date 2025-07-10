@@ -184,9 +184,28 @@ export class Home implements OnInit {
   // Eles continuarão funcionando localmente por enquanto.
 
   deleteCard(columnId: string, cardIndex: number) {
+    // 1. Encontramos a coluna correta onde o card está.
     const column = this.columns.find(c => c.id === columnId);
+
     if (column && column.cards[cardIndex]) {
-      column.cards.splice(cardIndex, 1);
+      // 2. Pegamos a ID do card que será excluído para enviar ao backend.
+      const cardIdToDelete = column.cards[cardIndex].id;
+
+      // 3. Chamamos o ApiService para deletar o card no backend.
+      this.apiService.deleteCard(cardIdToDelete).subscribe({
+        next: () => {
+          // 4. SUCESSO! O backend confirmou a exclusão.
+          console.log(`Card com ID ${cardIdToDelete} excluído com sucesso no backend.`);
+
+          // 5. Agora, e somente agora, removemos o card da lista local para atualizar a tela.
+          column.cards.splice(cardIndex, 1);
+        },
+        error: (err) => {
+          // 6. Lidamos com um possível erro de comunicação com o backend.
+          console.error('Erro ao excluir o card:', err);
+          alert('Não foi possível excluir o card. Tente novamente.');
+        }
+      });
     }
   }
   

@@ -29,4 +29,9 @@ export class ApiService {
    updateCard(cardId: number, updates: { columnId?: number; title?: string }): Observable<any> {
     return this.http.patch(`${this.apiUrl}/cards/${cardId}`, updates);}
   
+    deleteCard(cardId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/cards/${cardId}`);
+  }
+    
+  
 }
