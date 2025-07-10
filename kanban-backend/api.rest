@@ -1,0 +1,40 @@
+### Criar um novo cartão na Coluna de ID 1 ("A Fazer")
+POST http://localhost:3000/cards
+Content-Type: application/json
+
+{
+  "title": "Configurar o projeto Angular",
+  "description": "Instalar dependências e organizar as pastas.",
+  "columnId": 1
+}
+
+###
+
+### Criar outro cartão na Coluna de ID 1
+POST http://localhost:3000/cards
+Content-Type: application/json
+
+{
+  "title": "Criar a tela de login",
+  "columnId": 1
+}
+
+###
+
+### Listar APENAS os cartões da Coluna de ID 1
+GET http://localhost:3000/cards?columnId=1
+
+###
+
+### Mover o cartão de ID 2 para a Coluna de ID 2 ("Em Andamento")
+PATCH http://localhost:3000/cards/2
+Content-Type: application/json
+
+{
+  "columnId": 2
+}
+
+###
+
+### Listar APENAS os cartões da Coluna de ID 2 (para confirmar a mudança)
+GET http://localhost:3000/cards?columnId=2

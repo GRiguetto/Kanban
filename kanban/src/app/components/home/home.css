@@ -1,0 +1,306 @@
+/* Google font - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* styles do body */
+
+
+
+body{
+min-height: 100vh;
+display: flax;
+align-items: center;
+justify-content: center;
+background: linear-gradient( 90deg, #96eca0, #8af596);
+margin: 0;
+padding: 0;
+}
+
+/* kanban */
+.kanban{
+    display: flex;
+    gap: 15px;
+    padding: 25px;
+    width: 100%;
+    height: 90vh;
+    overflow-x: auto;
+}
+
+/* colunas */
+.kanban-column{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+    overflow-y: auto;
+    background-color: #caf0ce;
+    border-radius: 14px;
+    box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+    padding: 12px;
+    overflow: hidden;
+    min-width: 250px;
+}
+
+/* Titulo das colunas */
+.kanban-title{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.kanban-title h2{
+    font-size: 18px;
+    color: #4b5563;
+    font-weight: 600;
+}
+
+/* btn para add card */
+.add-card{
+    
+
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    height: fit-content;
+    white-space: nowrap;
+
+}
+
+ /* div que contem os cards */
+.kanban-cards{
+display: flex;
+flex-direction: column;
+gap: 8px;
+height: 100%;
+overflow-y: auto;
+overflow-x: hidden;
+
+}
+
+
+/* card */
+.kanban-card{
+display: flex;
+flex-direction: column;
+gap: 8px;
+background-color: column;
+gap: 8px;
+background-color: #ffff;
+border-radius: 14px;
+padding: 10px;
+box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.1);
+cursor: pointer;
+}
+
+/* btn para remover um card */
+.trash-btn{
+    color: #4b5563;
+    font-size: 15px;
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+  
+
+    width: 15px;
+    height: 15px;
+
+}
+
+.head-card{
+    display: flex;
+    justify-content: space-between;
+   
+}
+
+/* badge de prioridade de tarefas */
+.badge{
+    color: #ffff;
+    width: fit-content;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 12px;
+   
+}
+/* importancia extrema */
+.badge.high{
+    background-color: red;
+}
+/* importancia media */
+.badge.medium{
+    background-color: orange;
+}
+/* importancia baixa */
+.badge.low{
+    background-color: green;
+}
+
+/* informaçoes do card */
+.card-infos{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* icone dos cards */
+.card-icons{
+    display:flex;
+    gap: 18px;
+}
+
+.card-icons i{
+    color: #000000;
+}
+
+/* imagem do usuario */
+.user img{
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+/* scroll personalizada */
+
+*::-webkit-scrollbar{
+    width: 8px;
+}
+
+*::-webkit-scrollbar-track{
+    background-color: #eaeffa;
+}
+
+*::-webkit-scrollbar-thumb{
+    background-color: #6fc479;
+    border-radius: 20px;
+}
+
+
+
+
+
+/* Estilos do Modal */
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+   
+}
+
+.modal h2{
+    color: #0e761a;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 14px;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+   
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #929292;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.add-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-button:hover {
+    background-color: #45a049;
+}
+
+.add-button .material-icons {
+    margin-right: 0;
+}
+
+/* NOVO: Estilo para o botão de adicionar coluna */
+.add-column-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    height: fit-content;
+    white-space: nowrap;
+}
+
+/* NOVO: Estilo para o botão de excluir coluna */
+.delete-column-btn {
+    color: #4b5563;
+    font-size: 16px;
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    margin-left: 10px;
+}
+
+/* NOVO: Estilos para as ações do modal de confirmação */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+.add-button-cancel {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
