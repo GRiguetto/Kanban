@@ -103,25 +103,41 @@ export class Home implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      const containerId = event.container.id;
-      const extractedIndexString = containerId.split('-').pop();
-      if (!extractedIndexString) { return; }
-      const newColumnId = parseInt(extractedIndexString, 10) + 1;
+      const newColumnIdString = (event.container.element.nativeElement as HTMLElement).dataset['columnId'];
+
+      if (!newColumnIdString) {
+        console.error('ERRO: Não foi possível encontrar o data-column-id no container de destino.');
+        return;
+      }
+
+      const newColumnId = parseInt(newColumnIdString, 10);
       const movedCard = event.previousContainer.data[event.previousIndex];
 
-      // ✅ CORREÇÃO 3 e 4: Adicionamos os tipos para 'updatedCard' e 'err'
-      this.apiService.updateCard(movedCard.id, { columnId: newColumnId }).subscribe({
+      // Criamos a variável 'updates' com o tipo que corresponde ao que o serviço espera.
+      const updates = {
+        columnId: newColumnId
+      };
+
+      // Agora a chamada da função corresponde perfeitamente à sua definição.
+      this.apiService.updateCard(movedCard.id, updates).subscribe({
         next: (updatedCard: Card) => {
-          console.log(`SUCESSO: Card ${updatedCard.id} movido para a coluna ${updatedCard.columnId}`);
-          transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+          console.log(`SUCESSO: Card ${updatedCard.id} movido para a coluna ${updatedCard.columnId} no backend.`);
+          transferArrayItem(
+            event.previousContainer.data,
+            event.container.data,
+            event.previousIndex,
+            event.currentIndex,
+          );
         },
         error: (err: any) => {
-          console.error('ERRO: Falha ao mover o card:', err);
-          alert('Não foi possível mover o card.');
+          console.error('ERRO: Falha ao atualizar a coluna do card no backend:', err);
+          alert('Não foi possível mover o card. A página será recarregada.');
+          window.location.reload();
         }
       });
     }
   }
+  
 
   deleteCard(columnId: string, cardIndex: number) {
     const column = this.columns.find(c => c.id === columnId);

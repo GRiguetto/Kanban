@@ -32,8 +32,8 @@
 
             <div class="kanban-cards"
                  cdkDropList
-                 [cdkDropListData]="column.cards"
-                 (cdkDropListDropped)="drop($event)">
+     [attr.data-column-id]="column.id" [cdkDropListData]="column.cards"
+     (cdkDropListDropped)="drop($event)">
                
                  <div class="kanban-card" *ngFor="let card of column.cards; let i = index" cdkDrag>
                      <div class="head-card">
