@@ -21,7 +21,7 @@
         <div class="kanban-column" *ngFor="let column of columns; let colIndex = index" [attr.data-id]="column.id">
            
             <div class="kanban-title">
-                <h2>{{ column.title }}</h2>
+                <h2>{{ column.name }}</h2>
                 <div>
                     
                     <button class="delete-column-btn" (click)="openDeleteColumnModal(colIndex)">

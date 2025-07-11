@@ -32,6 +32,23 @@ export class ApiService {
     deleteCard(cardId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/cards/${cardId}`);
   }
+
+  // --- MÉTODOS NOVOS PARA AS COLUNAS ---
+
+  // Busca todas as colunas de um quadro (board)
+  getColumns(boardId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/columns?boardId=${boardId}`);
+  }
+
+  // Cria uma nova coluna
+  createColumn(columnData: { name: string; boardId: number }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/columns`, columnData);
+  }
+
+  // Deleta uma coluna pela sua ID
+  deleteColumn(columnId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/columns/${columnId}`);
+  }
     
   
 }
