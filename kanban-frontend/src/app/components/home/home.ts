@@ -27,8 +27,9 @@ interface Column {
   standalone: true,
   imports: [CommonModule, DragDropModule, ReactiveFormsModule],
   templateUrl: './home.html',
-  styleUrl: './home.css'
+  styleUrls: ['./home.css']
 })
+
 
 export class Home implements OnInit {
   // Propriedade para armazenar as colunas e seus cards
