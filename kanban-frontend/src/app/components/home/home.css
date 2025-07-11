@@ -1,306 +1,238 @@
-/* Google font - Poppins */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-*{
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   1. Variáveis Globais de Design (Tema)
+   ========================================================================== */
+:root {
+  /* Paleta de Cores Azul */
+  --color-primary: #007bff;         /* Azul vibrante para ações principais (mais intenso) */
+  --color-primary-light: #e0f2ff;   /* Azul claro para fundos sutis (mais presente) */
+  --color-secondary: #374151;       /* Cinza-azulado escuro para textos importantes */
+  --color-background: #f0f2f5;      /* Fundo geral um pouco mais claro */
+  --color-surface: #ffffff;         /* Fundo de cards e modais (branco puro) */
+  --color-text-primary: #111827;    /* Texto principal (quase preto) */
+  --color-text-secondary: #6b7280;  /* Texto secundário (cinza) */
+  --color-border: #d1d5db;          /* Cor das bordas */
+
+  /* Paleta de Cores para Badges (sem alterações) */
+  --color-badge-high: #dc2626;
+  --color-badge-medium: #f97316;
+  --color-badge-low: #16a34a;
+
+  /* Métricas de Design (sem alterações) */
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* styles do body */
-
-
-
-body{
-min-height: 100vh;
-display: flax;
-align-items: center;
-justify-content: center;
-background: linear-gradient( 90deg, #96eca0, #8af596);
-margin: 0;
-padding: 0;
+/* ==========================================================================
+   2. Estilos Globais e Reset
+   ========================================================================== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  margin: 0;
+  padding: var(--spacing-lg);
+  box-sizing: border-box;
 }
 
-/* kanban */
-.kanban{
-    display: flex;
-    gap: 15px;
-    padding: 25px;
-    width: 100%;
-    height: 90vh;
-    overflow-x: auto;
+/* ==========================================================================
+   3. Layout Principal do Kanban
+   ========================================================================== */
+.kanban {
+  display: flex;
+  gap: var(--spacing-lg);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-md);
 }
 
-/* colunas */
-.kanban-column{
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    height: 100%;
-    overflow-y: auto;
-    background-color: #caf0ce;
-    border-radius: 14px;
-    box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
-    padding: 12px;
-    overflow: hidden;
-    min-width: 250px;
+.kanban-column {
+  flex: 0 0 320px; /* Largura fixa para cada coluna */
+  background-color: var(--color-primary-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
 }
 
-/* Titulo das colunas */
-.kanban-title{
-    display: flex;
-    justify-content: space-between;
-
+.kanban-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding: 0 8px;
 }
 
-.kanban-title h2{
-    font-size: 18px;
-    color: #4b5563;
-    font-weight: 600;
+.kanban-title h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-secondary);
 }
 
-/* btn para add card */
-.add-card{
-    
-
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    height: fit-content;
-    white-space: nowrap;
-
+/* ==========================================================================
+   4. Estilos dos Cards
+   ========================================================================== */
+.kanban-cards {
+  flex-grow: 1;
+  min-height: 100px;
 }
 
- /* div que contem os cards */
-.kanban-cards{
-display: flex;
-flex-direction: column;
-gap: 8px;
-height: 100%;
-overflow-y: auto;
-overflow-x: hidden;
-
+.kanban-card {
+  background-color: var(--color-surface);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  cursor: grab;
+  transition: box-shadow 0.2s ease-in-out;
 }
 
-
-/* card */
-.kanban-card{
-display: flex;
-flex-direction: column;
-gap: 8px;
-background-color: column;
-gap: 8px;
-background-color: #ffff;
-border-radius: 14px;
-padding: 10px;
-box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.1);
-cursor: pointer;
+.kanban-card:hover {
+  box-shadow: var(--shadow-md);
 }
 
-/* btn para remover um card */
-.trash-btn{
-    color: #4b5563;
-    font-size: 15px;
-    background-color: transparent;
-    cursor: pointer;
-    border: 0;
-    padding: 0;
-  
-
-    width: 15px;
-    height: 15px;
-
+.head-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.head-card{
-    display: flex;
-    justify-content: space-between;
-   
+.card-title {
+  font-weight: 500;
+  margin: 0;
+  color: var(--color-text-primary);
 }
 
-/* badge de prioridade de tarefas */
-.badge{
-    color: #ffff;
-    width: fit-content;
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 12px;
-   
-}
-/* importancia extrema */
-.badge.high{
-    background-color: red;
-}
-/* importancia media */
-.badge.medium{
-    background-color: orange;
-}
-/* importancia baixa */
-.badge.low{
-    background-color: green;
+.badge {
+  padding: 4px 10px;
+  border-radius: 9999px; /* Efeito de pílula */
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
 }
 
-/* informaçoes do card */
-.card-infos{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.badge.low { background-color: var(--color-badge-low); }
+.badge.medium { background-color: var(--color-badge-medium); }
+.badge.high { background-color: var(--color-badge-high); }
+
+.card-infos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-md);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
 }
 
-/* icone dos cards */
-.card-icons{
-    display:flex;
-    gap: 18px;
+.card-icons { display: flex; gap: var(--spacing-md); }
+.card-icons i { margin-right: 5px; }
+.user img { width: 28px; height: 28px; border-radius: 50%; }
+
+/* ==========================================================================
+   5. Estilos dos Botões e Ações
+   ========================================================================== */
+.add-card, .add-column-btn, .delete-column-btn, .trash-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: color 0.2s, background-color 0.2s;
+  border-radius: var(--border-radius-md);
 }
 
-.card-icons i{
-    color: #000000;
+.add-card:hover, .add-column-btn:hover {
+  background-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
-/* imagem do usuario */
-.user img{
-    width: 35px;
-    height: 35px;
-    border-radius: 100%;
-    object-fit: cover;
+.add-card {
+  width: 100%;
+  padding: 10px;
+  text-align: left;
 }
 
-/* scroll personalizada */
-
-*::-webkit-scrollbar{
-    width: 8px;
+.add-column-btn {
+  flex-shrink: 0; /* Impede que o botão encolha */
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-lg);
+  font-weight: 500;
 }
 
-*::-webkit-scrollbar-track{
-    background-color: #eaeffa;
+.delete-column-btn, .trash-btn i {
+  padding: 8px;
 }
 
-*::-webkit-scrollbar-thumb{
-    background-color: #6fc479;
-    border-radius: 20px;
+.delete-column-btn:hover, .trash-btn i:hover {
+  color: var(--color-badge-high);
 }
 
-
-
-
-
-/* Estilos do Modal */
+/* ==========================================================================
+   6. Estilos dos Modais
+   ========================================================================== */
 .modal {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-   
-}
-
-.modal h2{
-    color: #0e761a;
+  position: fixed;
+  z-index: 1000;
+  inset: 0; /* Equivalente a top/bottom/left/right = 0 */
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-    border-radius: 14px;
+  background-color: var(--color-surface);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  width: 90%;
+  max-width: 420px;
+  position: relative;
 }
 
 .close-button {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
 }
 
-.close-button:hover,
-.close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+.modal-content h2 { margin-top: 0; color: var(--color-secondary); }
+.form-group { margin-bottom: var(--spacing-md); }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  box-sizing: border-box; /* Garante que padding não afete a largura total */
 }
 
-.form-group {
-    margin-bottom: 15px;
+.modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: var(--spacing-lg); }
+
+/* ==========================================================================
+   7. Estilos do Drag and Drop (Angular CDK)
+   ========================================================================== */
+.cdk-drag-placeholder {
+  background-color: rgba(0, 122, 255, 0.1);
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--border-radius-md);
+  opacity: 1;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-   
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #929292;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.add-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.add-button:hover {
-    background-color: #45a049;
-}
-
-.add-button .material-icons {
-    margin-right: 0;
-}
-
-/* NOVO: Estilo para o botão de adicionar coluna */
-.add-column-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    height: fit-content;
-    white-space: nowrap;
-}
-
-/* NOVO: Estilo para o botão de excluir coluna */
-.delete-column-btn {
-    color: #4b5563;
-    font-size: 16px;
-    background-color: transparent;
-    cursor: pointer;
-    border: none;
-    margin-left: 10px;
-}
-
-/* NOVO: Estilos para as ações do modal de confirmação */
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-.add-button-cancel {
-    background-color: #f44336;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+.kanban-cards.cdk-drop-list-dragging .kanban-card:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
