@@ -26,8 +26,8 @@ interface Column {
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, DragDropModule, ReactiveFormsModule],
-  templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  templateUrl: './home.html',    // O nome aqui bate com o seu arquivo .html?
+  styleUrls: ['./home.css']      // O nome aqui bate com o seu arquivo .css? É um array com colchetes?
 })
 
 

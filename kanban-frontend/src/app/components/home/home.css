@@ -1,47 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
-/* ==========================================================================
-   1. Variáveis Globais de Design (Tema)
-   ========================================================================== */
-:root {
-  /* Paleta de Cores Azul */
-  --color-primary: #007bff;         /* Azul vibrante para ações principais (mais intenso) */
-  --color-primary-light: #e0f2ff;   /* Azul claro para fundos sutis (mais presente) */
-  --color-secondary: #374151;       /* Cinza-azulado escuro para textos importantes */
-  --color-background: #f0f2f5;      /* Fundo geral um pouco mais claro */
-  --color-surface: #ffffff;         /* Fundo de cards e modais (branco puro) */
-  --color-text-primary: #111827;    /* Texto principal (quase preto) */
-  --color-text-secondary: #6b7280;  /* Texto secundário (cinza) */
-  --color-border: #d1d5db;          /* Cor das bordas */
-
-  /* Paleta de Cores para Badges (sem alterações) */
-  --color-badge-high: #dc2626;
-  --color-badge-medium: #f97316;
-  --color-badge-low: #16a34a;
-
-  /* Métricas de Design (sem alterações) */
-  --border-radius-md: 8px;
-  --border-radius-lg: 12px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* ==========================================================================
-   2. Estilos Globais e Reset
-   ========================================================================== */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-  margin: 0;
-  padding: var(--spacing-lg);
-  box-sizing: border-box;
-}
 
 /* ==========================================================================
    3. Layout Principal do Kanban
    ========================================================================== */
+   
+/* Usamos :host para aplicar estilos ao elemento raiz do nosso componente. */
+:host {
+  display: block;
+  padding: var(--spacing-lg);
+}
+
+/* Layout Principal do Kanban */
 .kanban {
   display: flex;
   gap: var(--spacing-lg);
