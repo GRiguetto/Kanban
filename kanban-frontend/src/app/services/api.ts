@@ -12,7 +12,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  // --- MÉTODOS PARA OS CARDS ---
   getCards(columnId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/cards?columnId=${columnId}`);
   }
@@ -21,7 +20,6 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/cards`, cardData);
   }
 
-  // 👇 MUDANÇA AQUI: Tornamos o tipo do parâmetro 'updates' mais robusto.
   updateCard(cardId: number, updates: { columnId: number }): Observable<any> {
     return this.http.patch(`${this.apiUrl}/cards/${cardId}`, updates);
   }
@@ -30,7 +28,6 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/cards/${cardId}`);
   }
 
-  // --- MÉTODOS PARA AS COLUNAS ---
   getColumns(boardId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/columns?boardId=${boardId}`);
   }

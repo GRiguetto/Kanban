@@ -1,3 +1,10 @@
+/* 1-Style root / Paltes de cores no arquivo style.css 
+   Caminho = src\style.css
+*/
+
+/* 2-Style do Body no arquivo style.css
+  caminho= src\style.css
+*/
 
 /* ==========================================================================
    3. Layout Principal do Kanban
@@ -104,8 +111,15 @@
 
 /* ==========================================================================
    5. Estilos dos Botões e Ações
-   ========================================================================== */
-.add-card, .add-column-btn, .delete-column-btn, .trash-btn {
+   ========================================================================== */  
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md); 
+}
+
+
+  .add-card, .add-column-btn, .delete-column-btn, .trash-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -154,6 +168,18 @@
   align-items: center;
 }
 
+.modal-actions button {
+  padding: 10px 20px; 
+  font-size: 12px; 
+  font-weight: 600; 
+  border: none;
+  border-radius: var(--border-radius-md);
+  color: var(--color-surface);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; 
+  box-shadow: var(--shadow-sm);   
+}
+
 .modal-content {
   background-color: var(--color-surface);
   padding: var(--spacing-lg);
@@ -171,6 +197,37 @@
   font-size: 1.8rem;
   color: var(--color-text-secondary);
   cursor: pointer;
+}
+
+.add-button{
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: color 0.2s, background-color 0.2s;
+  border-radius: var(--border-radius-md);
+}
+
+.add-button:hover{
+   background-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.delete-column-button {
+  background-color: var(--color-red-btn);
+}
+
+.delete-column-button:hover {
+  background-color: #a5000a; 
+}
+
+
+.cancel-delet-button {
+  background-color: var(--color-green-btn);
+}
+
+.cancel-delet-button:hover {
+  background-color: #008716; 
 }
 
 .modal-content h2 { margin-top: 0; color: var(--color-secondary); }

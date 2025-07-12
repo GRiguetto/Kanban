@@ -26,8 +26,8 @@ interface Column {
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, DragDropModule, ReactiveFormsModule],
-  templateUrl: './home.html',    // O nome aqui bate com o seu arquivo .html?
-  styleUrls: ['./home.css']      // O nome aqui bate com o seu arquivo .css? É um array com colchetes?
+  templateUrl: './home.html',    
+  styleUrls: ['./home.css']      
 })
 
 
@@ -51,7 +51,7 @@ export class Home implements OnInit {
   /**
    * O construtor é usado para injetar dependências que a classe necessita.
    * @param fb - FormBuilder, um serviço para criar formulários complexos.
-   * @param apiService - Nosso serviço customizado para se comunicar com o backend.
+   * @param apiService - serviço customizado para se comunicar com o backend.
    */
   constructor(private fb: FormBuilder, private apiService: ApiService) {
     // Inicialização dos formulários no construtor
