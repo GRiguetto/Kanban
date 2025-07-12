@@ -31,6 +31,11 @@
   padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overflow: hidden;
+  min-width: 250px;
+  min-height: 600px;
+  max-height: 625px;
 }
 
 .kanban-title {
@@ -54,6 +59,8 @@
 .kanban-cards {
   flex-grow: 1;
   min-height: 100px;
+  overflow-y: auto;
+overflow-x: hidden;
 }
 
 .kanban-card {
@@ -166,6 +173,7 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 }
 
 .modal-actions button {
@@ -260,4 +268,53 @@ button:hover {
 
 .kanban-cards.cdk-drop-list-dragging .kanban-card:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   8. Estilos da Barra de Rolagem (Scrollbar)
+   ========================================================================== */
+
+.kanban::-webkit-scrollbar {
+  height: 12px; 
+}
+
+.kanban::-webkit-scrollbar-track {
+  background-color: var(--color-primary-light); 
+  border-radius: 10px;
+}
+
+.kanban::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary); 
+  border-radius: 10px;
+  border: 3px solid var(--color-primary-light); 
+}
+
+.kanban::-webkit-scrollbar-thumb:hover {
+  background-color: #0056b3; 
+}
+
+/* ==========================================================================
+   9. Estilos da Barra de Rolagem Vertical (Dentro das Colunas)
+   ========================================================================== */
+
+.kanban-cards::-webkit-scrollbar {
+  width: 12px; 
+}
+
+
+.kanban-cards::-webkit-scrollbar-track {
+  background-color: transparent; 
+  border-radius: 10px;
+}
+
+
+.kanban-cards::-webkit-scrollbar-thumb {
+  background-color: var(--color-border); 
+  border-radius: 10px;
+  border: 3px solid var(--color-primary-light); 
+}
+
+
+.kanban-cards::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-secondary); 
 }

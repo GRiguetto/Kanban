@@ -11,7 +11,7 @@
   --color-surface: #ffffff;
   --color-text-primary: #111827;
   --color-text-secondary: #6b7280;
-  --color-border: #d1d5db;
+  --color-border: #9097a1;
   --color-badge-high: #dc2626;
   --color-badge-medium: #f97316;
   --color-badge-low: #16a34a;
@@ -32,4 +32,5 @@ body {
   color: var(--color-text-primary);
   margin: 0;
   box-sizing: border-box;
+  min-height: 100vh;
 }
