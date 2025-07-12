@@ -1,13 +1,38 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm'; 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TasksModule } from './tasks/tasks.module';
-import { BoardsModule } from './boards/boards.module';
 import { ColumnsModule } from './columns/columns.module';
 import { CardsModule } from './cards/cards.module';
+import { Column } from './columns/entities/column.entity';
+import { Card } from './cards/entities/card.entity';
 
 @Module({
-  imports: [TasksModule, BoardsModule, ColumnsModule, CardsModule],
+  imports: [
+    
+    TypeOrmModule.forRoot({
+      // 'type' especifica o tipo de banco de dados que estamos usando.
+      type: 'sqlite',
+      
+      // 'database' é o nome do arquivo onde o banco de dados será salvo.
+      // Ele será criado automaticamente na raiz do seu projeto backend.
+      database: 'kanban.db',
+      
+      // 'entities' diz ao TypeORM quais classes (entidades) devem ser transformadas em tabelas no banco de dados.
+      // Por enquanto, deixaremos vazio. Vamos adicionar nossas entidades nos próximos passos.
+      entities: [Column, Card], 
+      
+      // 'synchronize: true' é uma opção poderosa para desenvolvimento.
+      // Ele automaticamente cria e atualiza as tabelas do seu banco de dados
+      // com base nas suas classes de entidade. Nunca use em produção!
+      synchronize: true, 
+    }),
+    
+    
+    
+    ColumnsModule,
+    CardsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
