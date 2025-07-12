@@ -96,3 +96,7 @@
         </div>
     </div>
 </div>
+
+<div class="notification" *ngIf="notification.isVisible" [ngClass]="'notification--' + notification.type">
+    <span>{{ notification.message }}</span>
+</div>

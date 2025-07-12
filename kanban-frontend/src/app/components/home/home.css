@@ -318,3 +318,53 @@ button:hover {
 .kanban-cards::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-text-secondary); 
 }
+
+
+/* ==========================================================================
+   10. Estilos do Componente de Notificação (Toast)
+   ========================================================================== */
+.notification {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%); /* Centraliza horizontalmente */
+  padding: 16px 24px;
+  border-radius: var(--border-radius-md);
+  color: white;
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  z-index: 2000; /* Garante que fique acima de tudo */
+
+  /* Animações de entrada e saída */
+  animation: fadeInAndOut 3s ease-in-out;
+}
+
+/* Estilo para notificações de erro */
+.notification--error {
+  background-color: var(--color-badge-high); /* Vermelho */
+}
+
+/* Estilo para notificações de sucesso (para uso futuro) */
+.notification--success {
+  background-color: var(--color-badge-low); /* Verde */
+}
+
+/* Animação Keyframes */
+@keyframes fadeInAndOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  90% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+}

@@ -35,6 +35,27 @@ export class Home implements OnInit {
   // Propriedade para armazenar as colunas e seus cards
   columns: Column[] = [];
 
+  //Notificação de quando acontecer algun erro
+  notification = {
+  message: '',
+  type: 'error', 
+  isVisible: false
+  };
+
+  /**
+ * Exibe uma notificação customizada na tela.
+ * @param message - A mensagem a ser exibida.
+ * @param type - O tipo de notificação ('success' ou 'error').
+ */
+    showNotification(message: string, type: 'success' | 'error'): void {
+    this.notification = { message, type, isVisible: true };
+
+    // Esconde a notificação automaticamente após 3 segundos.
+    setTimeout(() => {
+      this.notification.isVisible = false;
+    }, 3000);
+}
+
   // Propriedades para controlar a visibilidade e os dados dos modais
   isModalVisible = false;
   isAddColumnModalVisible = false;
@@ -167,8 +188,7 @@ export class Home implements OnInit {
       },
       error: err => {
         console.error('ERRO: Falha ao atualizar a coluna do card no backend:', err);
-        alert('Não foi possível mover o card. A página será recarregada.');
-        window.location.reload();
+        this.showNotification('Não foi possível mover o card. Tente novamente.', 'error');
       }
     });
   }
@@ -215,9 +235,10 @@ export class Home implements OnInit {
           }
         }
       },
-      error: (err: any) => {
+     error: (err: any) => {
         console.error('Erro ao excluir o card:', err);
-        alert('Não foi possível excluir o card.');
+        // Em vez de alert(), chamamos nossa nova função de notificação.
+        this.showNotification('Não foi possível excluir o card.', 'error');
       }
     });
   }
