@@ -2,8 +2,10 @@
   <div class="auth-card">
 
     <div *ngIf="isLoginView; else registerView">
+      
       <h2>Login</h2>
-      <p>Acesse seu quadro Kanban</p>
+      <p>Acesse ao seu quadro Kanban</p>
+      
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <div class="form-group">
           <label for="login-email">Email</label>
@@ -15,14 +17,15 @@
         </div>
         <button type="submit" [disabled]="loginForm.invalid">Entrar</button>
       </form>
+
       <p class="switch-form-text">
-        Não tem uma conta? <a (click)="toggleView()">Cadastre-se</a>
+        Não tem uma conta? <a (click)="toggleView()">Registe-se</a>
       </p>
     </div>
 
     <ng-template #registerView>
-      <h2>Cadastro</h2>
-      <p>Crie sua conta para começar</p>
+      <h2>Registo</h2>
+      <p>Crie a sua conta para começar</p>
       <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
         <div class="form-group">
           <label for="register-email">Email</label>

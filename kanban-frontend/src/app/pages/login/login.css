@@ -1,19 +1,23 @@
-/* ARQUIVO: src/app/pages/login/login.css */
-
-/* Container principal que ocupa toda a tela para centralizar o card de autenticação. */
+/* ==========================================================================
+   1. Container Principal da Página de Autenticação
+   ========================================================================== */
+/* Ocupa toda a tela e usa flexbox para centralizar o card de login. */
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--color-background); /* Usa a cor de fundo global */
+  background-color: var(--color-background); /* Usa a cor de fundo global do tema. */
   padding: var(--spacing-lg);
   box-sizing: border-box;
 }
 
-/* O "card" que contém os formulários de login e cadastro. */
+/* ==========================================================================
+   2. Card de Autenticação
+   ========================================================================== */
+/* O "card" branco que contém os formulários. */
 .auth-card {
-  background-color: var(--color-surface); /* Fundo branco, igual aos cards do Kanban */
+  background-color: var(--color-surface);
   padding: 40px;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
@@ -35,7 +39,9 @@
   color: var(--color-text-secondary);
 }
 
-/* Estilos para os grupos de formulário (label + input) */
+/* ==========================================================================
+   3. Estilos do Formulário (Inputs e Labels)
+   ========================================================================== */
 .form-group {
   margin-bottom: 20px;
   text-align: left;
@@ -58,14 +64,16 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Efeito de foco para os inputs, usando a cor primária do tema */
+/* Efeito de foco para os inputs, usando a cor primária para feedback visual. */
 .form-group input:focus {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-/* Estilo para o botão principal de submissão */
+/* ==========================================================================
+   4. Estilos de Botões e Links
+   ========================================================================== */
 button[type="submit"] {
   width: 100%;
   padding: 14px;
@@ -80,16 +88,16 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background-color: #0069d9; /* Um azul um pouco mais escuro no hover */
+  background-color: #0069d9;
 }
 
-/* Estilo para o botão quando o formulário é inválido */
+/* Estilo para o botão quando o formulário é inválido. */
 button[type="submit"]:disabled {
   background-color: #a0c7e4;
   cursor: not-allowed;
 }
 
-/* Estilo para o texto e link que alternam entre login e cadastro */
+/* Texto e link para alternar entre login e registo. */
 .switch-form-text {
   margin-top: 24px;
   font-size: 0.9rem;
@@ -107,9 +115,11 @@ button[type="submit"]:disabled {
   text-decoration: underline;
 }
 
-/* Estilos para a área de mensagens de erro e sucesso */
+/* ==========================================================================
+   5. Área de Mensagens de Feedback (Erro/Sucesso)
+   ========================================================================== */
 .message-area {
-  min-height: 48px; /* Reserva espaço para a mensagem não "empurrar" o layout */
+  min-height: 48px; /* Reserva espaço para a mensagem não "empurrar" o layout. */
   margin-top: 20px;
 }
 
