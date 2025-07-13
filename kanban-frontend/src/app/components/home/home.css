@@ -368,3 +368,33 @@ button:hover {
     transform: translate(-50%, 20px);
   }
 }
+
+/* ==========================================================================
+   11. Estilos do Indicador de Carregamento (Spinner)
+   ========================================================================== */
+.loading-overlay {
+  position: fixed; /* Cobre a tela inteira */
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.7); /* Fundo branco semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000; /* Garante que fique acima de tudo */
+  backdrop-filter: blur(4px); /* Efeito de vidro fosco no fundo */
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--color-primary-light); /* Borda clara */
+  border-top-color: var(--color-primary); /* Borda superior com a cor principal */
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite; /* Animação de rotação */
+}
+
+/* Animação que faz o spinner girar */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

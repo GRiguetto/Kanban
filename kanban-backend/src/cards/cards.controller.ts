@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 /**
  * Define a rota base para todos os endpoints de cards como '/cards'.
  */
 @Controller('cards')
+@UseGuards(JwtAuthGuard)
 export class CardsController {
   /**
    * Injeta o CardsService para que seus métodos possam ser usados neste controller.

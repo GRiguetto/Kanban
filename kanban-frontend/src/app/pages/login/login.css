@@ -1,0 +1,21 @@
+/* ARQUIVO: src/app/pages/login/login.component.css */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--color-background);
+}
+
+.login-card {
+  background-color: var(--color-surface);
+  padding: 40px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* ... cole o restante do CSS da página de login aqui ... */

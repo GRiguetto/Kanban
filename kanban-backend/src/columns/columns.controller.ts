@@ -1,5 +1,6 @@
 // Importa os 'decorators' que usamos para definir as rotas e manipular a requisição/resposta.
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ColumnsService } from './columns.service';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
@@ -9,6 +10,7 @@ import { UpdateColumnDto } from './dto/update-column.dto';
  * Neste caso, todas as rotas aqui começarão com '/columns'.
  */
 @Controller('columns')
+@UseGuards(JwtAuthGuard)
 export class ColumnsController {
   /**
    * O construtor injeta o ColumnsService.

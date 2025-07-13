@@ -1,3 +1,8 @@
+
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner"></div>
+</div>
+
 <main class="kanban" cdkDropListGroup>
 
     <div class="kanban-column" *ngFor="let column of columns; let colIndex = index">

@@ -33,7 +33,9 @@ interface Column {
 
 export class Home implements OnInit {
   // Propriedade para armazenar as colunas e seus cards
+  isLoading = true; // Começa como true, pois vamos carregar os dados imediatamente.
   columns: Column[] = [];
+ 
 
   //Notificação de quando acontecer algun erro
   notification = {
@@ -99,52 +101,49 @@ export class Home implements OnInit {
    * Carrega os dados iniciais do quadro: busca as colunas e, em seguida,
    * busca os cards para cada uma dessas colunas de forma otimizada.
    */
+  
   loadInitialData(): void {
-    const boardId = 1; // Usando um ID de quadro fixo por enquanto.
+    this.isLoading = true; // Ativa o spinner antes de começar a busca
+    const boardId = 1;
 
     this.apiService.getColumns(boardId).pipe(
-      // O 'switchMap' cancela a requisição anterior se uma nova for feita, evitando condições de corrida.
-      // Ele pega o resultado do getColumns (o array de colunas) e o passa para a próxima etapa.
       switchMap((columnsFromBackend: any[]) => {
-        // Mapeamos as colunas para o formato que nosso frontend usa.
         this.columns = columnsFromBackend.map(col => ({
           id: col.id.toString(),
           name: col.name,
           cards: []
         }));
-
-        // Se não houver colunas, retornamos um array vazio para não quebrar o forkJoin.
         if (this.columns.length === 0) {
           return [];
         }
-
-        // Criamos um array de "observables" (requisições) para buscar os cards de cada coluna.
         const cardRequests = this.columns.map(column => 
           this.apiService.getCards(parseInt(column.id)).pipe(
-            // O 'map' do RxJS transforma a resposta da API antes de ela chegar no subscribe.
-            map(cardsFromBackend => ({
+            map((cardsFromBackend: any[]) => ({
               columnId: column.id,
-              cards: cardsFromBackend.map(card => this.mapCardData(card))
+              cards: cardsFromBackend.map((card: any) => this.mapCardData(card))
             }))
           )
         );
-
-        // O 'forkJoin' executa todas as requisições de cards em paralelo e só continua
-        // quando TODAS elas tiverem sido concluídas com sucesso. É muito mais eficiente.
         return forkJoin(cardRequests);
       })
-    ).subscribe(results => {
-      // O 'results' é um array com os resultados de todas as buscas de cards.
-      // Ex: [{ columnId: '1', cards: [...] }, { columnId: '2', cards: [...] }]
-      results.forEach(result => {
-        const columnIndex = this.columns.findIndex(col => col.id === result.columnId);
-        if (columnIndex !== -1) {
-          this.columns[columnIndex].cards = result.cards;
-        }
-      });
-      console.log('Dados iniciais carregados com sucesso!', this.columns);
+    ).subscribe({
+      next: (results: any[]) => {
+        results.forEach((result: any) => {
+          const columnIndex = this.columns.findIndex(col => col.id === result.columnId);
+          if (columnIndex !== -1) {
+            this.columns[columnIndex].cards = result.cards;
+          }
+        });
+        console.log('Dados iniciais carregados com sucesso!');
+        this.isLoading = false; // ✅ Desativa o spinner após o sucesso
+      },
+      error: (err) => {
+        console.error('Erro ao carregar dados iniciais:', err);
+        this.isLoading = false; // ✅ Desativa o spinner em caso de erro
+        this.showNotification('Não foi possível carregar o quadro. Tente recarregar a página.', 'error');
+      }
     });
-  }
+}
 
   /**
    * Lida com o evento de "soltar" um card em uma lista (cdkDropList).
