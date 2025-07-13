@@ -1,71 +1,8 @@
-# =======================================================
-# FLUXO DE AUTENTICAÇÃO COMPLETO
-# =======================================================
-
-###
-### PASSO 1: Registrar um novo usuário
-# Envia uma requisição POST para criar um novo usuário.
-# Na primeira vez, você receberá uma resposta 201 Created.
-# Se tentar registrar o mesmo email novamente, receberá 409 Conflict.
+### Registar um novo utilizador
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-  "email": "gabrielriguetto3@gmail.com",
-  "password": "pingo123"
-}
-
-###
-### PASSO 2: Fazer login para obter o Token de Acesso
-# Envie as mesmas credenciais que você acabou de registrar.
-# A resposta de sucesso (200 OK) conterá o "access_token".
-# COPIE o valor do token (sem as aspas) para usar no próximo passo.
-POST http://localhost:3000/auth/login
-Content-Type: application/json
-
-{
-  "email": "gabrielriguetto3@gmail.com",
-  "password": "pingo123"
-}
-
-###
-# Para testar o erro de login, use a requisição abaixo com a senha errada.
-# Você deve receber uma resposta 401 Unauthorized.
-POST http://localhost:3000/auth/login
-Content-Type: application/json
-
-{
-  "email": "meu.usuario@teste.com",
-  "password": "senhaErrada"
-}
-
-# =======================================================
-# TESTANDO ROTAS PROTEGIDAS
-# =======================================================
-
-###
-### PASSO 3 (A): Tentar acessar uma rota protegida SEM o token
-# Esta requisição DEVE FALHAR.
-# O servidor responderá com um erro 401 Unauthorized, pois o "segurança" (Guard)
-# barrou a sua entrada por falta de um token válido.
-GET http://localhost:3000/columns
-
-###
-### PASSO 3 (B): Acessar uma rota protegida COM o token
-# Para esta requisição funcionar, você precisa adicionar o cabeçalho (Header) de autorização.
-# Troque "SEU_TOKEN_COPIADO_AQUI" pelo token que você copiou do PASSO 2.
-# A palavra "Bearer" (com um espaço depois) é obrigatória.
-GET http://localhost:3000/columns
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiZ2FicmllbHJpZ3VldHRvM0BnbWFpbC5jb20iLCJpYXQiOjE3NTIzNjkzODYsImV4cCI6MTc1MjM3Mjk4Nn0.esl0fTLhDs1S720wd6CNqqagqZrq2rHOod_13_YtDOg
-
-###
-# Você também pode testar outras rotas protegidas, como criar um card:
-POST http://localhost:3000/cards
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiZ2FicmllbHJpZ3VldHRvM0BnbWFpbC5jb20iLCJpYXQiOjE3NTIzNjkzODYsImV4cCI6MTc1MjM3Mjk4Nn0.esl0fTLhDs1S720wd6CNqqagqZrq2rHOod_13_YtDOg
-
-{
-  "title": "Meu primeiro card autenticado!",
-  "columnId": 1,
-  "badge": "high"
+  "email": "novo-utilizador@exemplo.com",
+  "password": "senhaForte123"
 }
