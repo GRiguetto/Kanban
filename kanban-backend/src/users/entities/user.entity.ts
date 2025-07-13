@@ -1,15 +1,35 @@
+// ARQUIVO: src/users/entities/user.entity.ts
+
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
+/**
+ * @Entity() marca esta classe como uma entidade do TypeORM.
+ * Isto significa que ela será mapeada para uma tabela no banco de dados
+ * que, por defeito, terá o nome da classe em minúsculas: 'user'.
+ */
 @Entity()
 export class User {
+  /**
+   * @PrimaryGeneratedColumn() define a 'id' como a chave primária da tabela.
+   * O banco de dados irá gerar automaticamente um valor numérico único e incremental
+   * para cada novo utilizador criado (1, 2, 3, ...).
+   */
   @PrimaryGeneratedColumn()
   id: number;
 
-  // Define a coluna 'email' como única, para não permitir dois usuários com o mesmo email.
+  /**
+   * @Column({ unique: true }) marca a propriedade 'email' como uma coluna na tabela.
+   * - O 'unique: true' é uma restrição importante que garante que não possam
+   * existir dois utilizadores com o mesmo endereço de email no banco de dados.
+   */
   @Column({ unique: true })
   email: string;
 
-  // A coluna 'password' irá guardar a senha CRIPTOGRAFADA.
+  /**
+   * @Column() marca a propriedade 'password' como uma coluna.
+   * Esta coluna irá guardar a senha do utilizador de forma CRIPTOGRAFADA (o "hash"),
+   * nunca em texto plano.
+   */
   @Column()
   password: string;
 }
