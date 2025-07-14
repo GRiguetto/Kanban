@@ -16,6 +16,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
+      // Este teste é simples e não precisa de mocks complexos.
       expect(appController.getHello()).toBe('Hello World!');
     });
   });

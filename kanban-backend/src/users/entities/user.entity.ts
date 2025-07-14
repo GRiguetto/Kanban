@@ -40,7 +40,7 @@ export class User {
    */
   @Column({
     nullable: true,
-    default: 'https://www.flaticon.com/free-icon/user_9131549?term=user+images&page=1&position=6&origin=tag&related_id=9131549' // URL de uma imagem de perfil genérica
+    default: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1906669723.jpg' // URL de uma imagem de perfil genérica
   })
   profileImageUrl: string;
 }
