@@ -27,11 +27,11 @@ O sistema inclui um fluxo de autenticação completo com tokens JWT, persistênc
     * Funcionalidade de "Arrastar e Soltar" (Drag & Drop) para mover cards entre colunas, com a alteração a ser salva permanentemente no banco de dados.
 
 * **Gestão de Perfil:**
-    * Um menu de conta para o utilizador ver os seus dados.
+    * Um menu de conta para o ulsúario ver os seus dados.
     * Funcionalidade para atualizar a foto de perfil.
     * Sistema de logout seguro que invalida a sessão no frontend.
 
-* **Experiência do Utilizador (UX):**
+* **Experiência do Usúario (UX):**
     * Interface limpa e minimalista com um tema de cores coeso.
     * Indicadores de carregamento (spinners) enquanto os dados são buscados.
     * Notificações não-bloqueantes (toasts) para feedback de erros.
