@@ -3,10 +3,10 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { forkJoin, map, switchMap } from 'rxjs';
 import { ApiService } from '../../services/api';
 import { AuthService } from '../../services/auth';
 import { Router } from '@angular/router';
+import { forkJoin, map, switchMap, tap, finalize } from 'rxjs';
 
 // --- Interfaces de Modelo ---
 
@@ -121,48 +121,69 @@ export class Home implements OnInit {
    * busca os cards para cada uma dessas colunas de forma otimizada.
    */
   
+  /**
+ * Carrega todos os dados necessários para a página de forma encadeada e segura.
+ */
   loadInitialData(): void {
-    this.isLoading = true; // Ativa o spinner antes de começar a busca
-    const boardId = 1;
+    this.isLoading = true;
 
-    this.apiService.getColumns(boardId).pipe(
+    this.apiService.getProfile().pipe(
+      // Guarda o perfil do utilizador
+      tap((profile: UserProfile) => {
+        this.currentUser = profile;
+        this.updateProfileForm.patchValue({ profileImageUrl: profile.profileImageUrl });
+      }),
+      // Continua para buscar as colunas
+      switchMap(() => this.apiService.getColumns(1)),
+      // Pega as colunas e prepara a busca dos cards
       switchMap((columnsFromBackend: any[]) => {
         this.columns = columnsFromBackend.map(col => ({
           id: col.id.toString(),
           name: col.name,
           cards: []
         }));
+
         if (this.columns.length === 0) {
-          return [];
+          return forkJoin([]); // Retorna um observable vazio se não houver colunas
         }
-        const cardRequests = this.columns.map(column => 
+
+        const cardRequests = this.columns.map(column =>
           this.apiService.getCards(parseInt(column.id)).pipe(
-            map((cardsFromBackend: any[]) => ({
+            map((cards: any[]) => ({
               columnId: column.id,
-              cards: cardsFromBackend.map((card: any) => this.mapCardData(card))
+              cards: cards.map(card => this.mapCardData(card))
             }))
           )
         );
+        // forkJoin espera que todas as buscas de cards terminem
         return forkJoin(cardRequests);
+      }),
+      //    O operador 'finalize' é executado SEMPRE que a cadeia de observables termina,
+      //    seja por sucesso ou por erro. É o lugar perfeito para desligar o spinner.
+      finalize(() => {
+        this.isLoading = false;
       })
     ).subscribe({
-      next: (results: any[]) => {
-        results.forEach((result: any) => {
+      next: (cardResults: any[]) => {
+        // Popula os cards nas colunas corretas
+        cardResults.forEach(result => {
           const columnIndex = this.columns.findIndex(col => col.id === result.columnId);
           if (columnIndex !== -1) {
             this.columns[columnIndex].cards = result.cards;
           }
         });
-        console.log('Dados iniciais carregados com sucesso!');
-        this.isLoading = false; // ✅ Desativa o spinner após o sucesso
+        console.log('Todos os dados foram carregados com sucesso!');
       },
       error: (err) => {
-        console.error('Erro ao carregar dados iniciais:', err);
-        this.isLoading = false; // ✅ Desativa o spinner em caso de erro
-        this.showNotification('Não foi possível carregar o quadro. Tente recarregar a página.', 'error');
+        console.error("Erro durante o carregamento dos dados iniciais:", err);
+        this.showNotification('Não foi possível carregar os dados. Tente fazer login novamente.', 'error');
+        // Se houver um erro de autenticação, é uma boa prática fazer logout
+        if (err.status === 401) {
+          this.logout();
+        }
       }
     });
-}
+  }
 
   /**
    * Lida com o evento de "soltar" um card em uma lista (cdkDropList).
@@ -303,30 +324,50 @@ export class Home implements OnInit {
   }
 
   /**
-   * Submete a atualização do perfil.
-   */
-  onUpdateProfile(): void {
-    if (this.updateProfileForm.invalid || !this.currentUser) {
-      return;
-    }
+ * Submete a atualização do perfil.
+ */
+    onUpdateProfile(): void {
+      console.log('1. Botão "Salvar Alterações" clicado, onUpdateProfile() executado.');
 
-    const updates = {
-      profileImageUrl: this.updateProfileForm.value.profileImageUrl
-    };
-
-    this.apiService.updateProfile(updates).subscribe({
-      next: (updatedProfile) => {
-        console.log("Perfil atualizado com sucesso!", updatedProfile);
-        this.currentUser = updatedProfile; // Atualiza os dados do utilizador na tela.
-        this.closeAccountModal();
-        this.loadInitialData(); // Recarrega os dados para atualizar as imagens nos cards.
-      },
-      error: (err) => {
-        console.error("Erro ao atualizar o perfil:", err);
-        // Aqui poderíamos usar o nosso componente de notificação
+      if (this.updateProfileForm.invalid) {
+        console.error('2. ERRO: O formulário é inválido. Interrompendo.');
+        return;
       }
-    });
-  }
+
+      if (!this.currentUser) {
+        console.error('2. ERRO: Não há um utilizador atual (currentUser é nulo). Interrompendo.');
+        return;
+      }
+
+      console.log('2. Formulário é válido e o utilizador existe.');
+
+      const updates = {
+        profileImageUrl: this.updateProfileForm.value.profileImageUrl
+      };
+
+      console.log('3. A enviar os seguintes dados para a API:', updates);
+
+      this.apiService.updateProfile(updates).subscribe({
+        next: (updatedProfile) => {
+          console.log("4. SUCESSO: Backend respondeu com o perfil atualizado!", updatedProfile);
+
+          this.currentUser = updatedProfile;
+
+          this.columns.forEach(column => {
+            column.cards.forEach(card => {
+              card.userProfileImageUrl = updatedProfile.profileImageUrl;
+            });
+          });
+
+          this.closeAccountModal();
+          console.log("5. Modal fechado e UI atualizada.");
+        },
+        error: (err) => {
+          console.error("4. ERRO: A chamada à API falhou.", err);
+          this.showNotification('Não foi possível atualizar o perfil.', 'error');
+        }
+      });
+    }
 
   /**
    * Faz o logout do utilizador.

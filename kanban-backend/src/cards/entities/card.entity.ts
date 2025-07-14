@@ -40,4 +40,11 @@ export class Card {
    */
   @Column()
   badge: 'low' | 'medium' | 'high';
+
+  
+  // Armazena a ID do utilizador que é o "dono" deste card.
+  @Column()
+  userId: number;
 }
+   
+  

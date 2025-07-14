@@ -26,9 +26,9 @@ export class Column {
   name: string;
 
   /**
-   * @Column() para a ID do quadro ao qual esta coluna pertence.
-   * No futuro, isso se tornará uma relação (foreign key) com uma entidade 'Board'.
+   * Armazena a ID do utilizador que é o "dono" desta coluna.
+   * Isto garante que as colunas de um utilizador são separadas das de outro.
    */
   @OrmColumn()
-  boardId: number;
+  userId: number;
 }

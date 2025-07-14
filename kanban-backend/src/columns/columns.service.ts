@@ -1,98 +1,74 @@
 // ARQUIVO: src/columns/columns.service.ts
 
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm'; //decorator para injetar o repositório
-import { Repository } from 'typeorm'; //classe Repository
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateColumnDto } from './dto/create-column.dto';
-import { UpdateColumnDto } from './dto/update-column.dto';
 import { Column } from './entities/column.entity';
 
 @Injectable()
 export class ColumnsService {
-  /**
-   * Injeta o repositório da entidade 'Column'.
-   * O NestJS e o TypeORM cuidam de nos fornecer uma instância do repositório
-   * que sabe como interagir com a tabela 'column' no banco de dados.
-   * @param columnRepository - O repositório para a entidade Column.
-   */
   constructor(
     @InjectRepository(Column)
     private readonly columnRepository: Repository<Column>,
   ) {}
-  // NOTA: Os arrays em memória 'columns' e 'lastId' foram removidos!
 
   /**
-   * Cria uma nova coluna no banco de dados.
+   * Cria uma nova coluna para um utilizador específico.
    * @param createColumnDto - Os dados para a nova coluna.
-   * @returns A promessa da coluna recém-criada e salva.
+   * @param userId - A ID do utilizador autenticado que é o dono da coluna.
+   * @returns A promessa da coluna recém-criada.
    */
-  async create(createColumnDto: CreateColumnDto): Promise<Column> {
-    // 1. Cria uma nova instância da entidade com os dados do DTO.
-    const newColumn = this.columnRepository.create(createColumnDto);
-    // 2. Salva a nova entidade no banco de dados. O TypeORM cuida de gerar a ID.
+  async create(createColumnDto: CreateColumnDto, userId: number): Promise<Column> {
+    // Criamos uma nova instância da entidade, combinando os dados do DTO
+    // com a ID do utilizador que veio do token.
+    const newColumn = this.columnRepository.create({
+      ...createColumnDto,
+      userId: userId, //  Garante que a nova coluna tem um dono.
+    });
     return this.columnRepository.save(newColumn);
   }
 
   /**
-   * Busca colunas do banco de dados, opcionalmente filtrando por 'boardId'.
-   * @param boardId - (Opcional) A ID do quadro para filtrar.
-   * @returns Uma promessa de um array de colunas.
+   * Busca todas as colunas que pertencem a um utilizador específico.
+   * @param userId - A ID do utilizador autenticado.
+   * @returns Uma promessa de um array com as colunas do utilizador.
    */
-  findAll(boardId?: number): Promise<Column[]> {
-    // Usa o método 'find' do repositório. A cláusula 'where' é como um filtro.
+  findAll(userId: number): Promise<Column[]> {
+    // A cláusula 'where' agora filtra para encontrar apenas as colunas
+    // onde a 'userId' corresponde à ID do utilizador logado.
     return this.columnRepository.find({
-      where: {
-        boardId: boardId,
-      },
+      where: { userId }, //  Garante que o utilizador só veja as suas próprias colunas.
     });
   }
 
   /**
-   * Busca uma única coluna pela sua ID no banco de dados.
-   * @param id - A ID da coluna a ser encontrada.
-   * @returns A promessa da coluna encontrada.
-   * @throws {NotFoundException} Se nenhuma coluna com a ID for encontrada.
+   * Remove uma coluna, garantindo que o utilizador só pode remover as suas próprias colunas.
+   * @param id - A ID da coluna a ser removida.
+   * @param userId - A ID do utilizador que está a fazer a requisição.
    */
-  async findOne(id: number): Promise<Column> {
-    // O 'findOne' busca o primeiro registro que bate com a condição.
+  async remove(id: number, userId: number): Promise<{ message: string }> {
+    // 1. Primeiro, encontramos a coluna que se quer apagar.
     const column = await this.columnRepository.findOne({ where: { id } });
+
     if (!column) {
       throw new NotFoundException(`Coluna com ID #${id} não encontrada.`);
     }
-    return column;
-  }
 
-  /**
-   * Remove uma coluna do banco de dados pela sua ID.
-   * @param id - A ID da coluna a ser removida.
-   * @returns Uma promessa com uma mensagem de sucesso.
-   */
-  async remove(id: number): Promise<{ message: string }> {
-    // O 'delete' remove registros que batem com a condição e retorna um objeto de resultado.
-    const result = await this.columnRepository.delete(id);
-    if (result.affected === 0) {
-      // Se nenhuma linha foi afetada, significa que a coluna não foi encontrada.
-      throw new NotFoundException(`Coluna com ID #${id} não encontrada.`);
+    // 2.  Verificação de Segurança Crucial:
+    //    Verificamos se a 'userId' da coluna guardada no banco de dados é a mesma
+    //    da 'userId' do utilizador que está a tentar apagá-la.
+    if (column.userId !== userId) {
+      // Se não for, lançamos um erro 403 Forbidden, pois ele está a tentar
+      // apagar algo que não lhe pertence.
+      throw new ForbiddenException('Você não tem permissão para apagar esta coluna.');
     }
+
+    // 3. Se a verificação passar, apagamos a coluna.
+    await this.columnRepository.delete(id);
     return { message: `Coluna com ID #${id} removida com sucesso.` };
   }
 
-  /**
-   * Atualiza os dados de uma coluna.
-   * @param id - A ID da coluna a ser atualizada.
-   * @param updateColumnDto - Os novos dados para a coluna.
-   */
-  async update(id: number, updateColumnDto: UpdateColumnDto): Promise<Column> {
-    // O 'preload' primeiro carrega a entidade existente e depois mescla os novos dados.
-    // É uma forma segura de fazer um 'update'.
-    const column = await this.columnRepository.preload({
-      id: id,
-      ...updateColumnDto,
-    });
-    if (!column) {
-      throw new NotFoundException(`Coluna com ID #${id} não encontrada.`);
-    }
-    // Salva a entidade atualizada de volta no banco de dados.
-    return this.columnRepository.save(column);
-  }
+  // NOTA: O update e o findOne também precisariam de ser atualizados com esta
+  // mesma lógica de segurança se fossemos usá-los extensivamente.
 }
