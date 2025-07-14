@@ -32,4 +32,15 @@ export class User {
    */
   @Column()
   password: string;
+
+  /**
+   * Armazena o URL da imagem de perfil do utilizador.
+   * - 'nullable: true' permite que o campo seja vazio (para novos utilizadores).
+   * - 'default: ...' define uma imagem genérica padrão para novos utilizadores.
+   */
+  @Column({
+    nullable: true,
+    default: 'https://i.imgur.com/6b6psnA.png' // URL de uma imagem de perfil genérica
+  })
+  profileImageUrl: string;
 }

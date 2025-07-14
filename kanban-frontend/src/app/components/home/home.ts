@@ -5,8 +5,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { forkJoin, map, switchMap } from 'rxjs';
 import { ApiService } from '../../services/api';
+import { AuthService } from '../../services/auth';
+import { Router } from '@angular/router';
 
 // --- Interfaces de Modelo ---
+
+// --- Interfaces do profile ---
+interface UserProfile {
+  id: number;
+  email: string;
+  profileImageUrl: string;
+}
+
 // Definem a "forma" dos nossos dados, garantindo consistência.
 interface Card {
   id: number;
@@ -14,6 +24,7 @@ interface Card {
   title: string;
   badge: 'low' | 'medium' | 'high';
   badgeText: string; // Esta propriedade é adicionada no frontend para exibição.
+  userProfileImageUrl?: string; 
 }
 
 interface Column {
@@ -35,6 +46,7 @@ export class Home implements OnInit {
   // Propriedade para armazenar as colunas e seus cards
   isLoading = true; // Começa como true, pois vamos carregar os dados imediatamente.
   columns: Column[] = [];
+  currentUser: UserProfile | null = null; // Guarda os dados do usuario logado
  
 
   //Notificação de quando acontecer algun erro
@@ -62,6 +74,7 @@ export class Home implements OnInit {
   isModalVisible = false;
   isAddColumnModalVisible = false;
   isDeleteColumnModalVisible = false;
+  isAccountModalVisible = false;
   
   // Propriedades para armazenar o estado temporário durante uma ação
   currentColumnId: string | null = null;
@@ -70,13 +83,15 @@ export class Home implements OnInit {
   // Propriedades para os formulários reativos do Angular
   addCardForm: FormGroup;
   addColumnForm: FormGroup;
+  updateProfileForm: FormGroup;
 
   /**
    * O construtor é usado para injetar dependências que a classe necessita.
    * @param fb - FormBuilder, um serviço para criar formulários complexos.
    * @param apiService - serviço customizado para se comunicar com o backend.
    */
-  constructor(private fb: FormBuilder, private apiService: ApiService) {
+  constructor(private fb: FormBuilder, private apiService: ApiService, private authService: AuthService, private router: Router) {
+
     // Inicialização dos formulários no construtor
     this.addCardForm = this.fb.group({
       title: ['', Validators.required],
@@ -85,6 +100,10 @@ export class Home implements OnInit {
     
     this.addColumnForm = this.fb.group({
       title: ['', Validators.required]
+    });
+
+    this.updateProfileForm = this.fb.group({
+      profileImageUrl: ['']
     });
   }
 
@@ -283,14 +302,42 @@ export class Home implements OnInit {
     });
   }
 
+  /**
+   * Submete a atualização do perfil.
+   */
+  onUpdateProfile(): void {
+    if (this.updateProfileForm.invalid || !this.currentUser) {
+      return;
+    }
+
+    const updates = {
+      profileImageUrl: this.updateProfileForm.value.profileImageUrl
+    };
+
+    this.apiService.updateProfile(updates).subscribe({
+      next: (updatedProfile) => {
+        console.log("Perfil atualizado com sucesso!", updatedProfile);
+        this.currentUser = updatedProfile; // Atualiza os dados do utilizador na tela.
+        this.closeAccountModal();
+        this.loadInitialData(); // Recarrega os dados para atualizar as imagens nos cards.
+      },
+      error: (err) => {
+        console.error("Erro ao atualizar o perfil:", err);
+        // Aqui poderíamos usar o nosso componente de notificação
+      }
+    });
+  }
+
+  /**
+   * Faz o logout do utilizador.
+   */
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
   // --- Funções Auxiliares e de Controle de Modal ---
   
-  /**
-   * Função auxiliar para mapear dados de um card do backend para o formato do frontend,
-   * adicionando a propriedade 'badgeText' que não vem da API.
-   * @param cardData - Os dados do card vindos do backend.
-   * @returns Um objeto Card completo para o frontend.
-   */
   private mapCardData(cardData: any): Card {
     const badgeTextMap = {
       low: 'Prioridade mínima',
@@ -299,10 +346,21 @@ export class Home implements OnInit {
     };
     return {
       ...cardData,
-      badgeText: badgeTextMap[cardData.badge as 'low' | 'medium' | 'high'] || ''
+      badgeText: badgeTextMap[cardData.badge as 'low' | 'medium' | 'high'] || '',
+      // Atribui a foto de perfil do utilizador logado a cada card.
+      userProfileImageUrl: this.currentUser?.profileImageUrl 
     };
   }
 
+  // --- Funções Auxiliares e de Controle de Modal ---
+  
+  /**
+   * Função auxiliar para mapear dados de um card do backend para o formato do frontend,
+   * adicionando a propriedade 'badgeText' que não vem da API.
+   * @param cardData - Os dados do card vindos do backend.
+   * @returns Um objeto Card completo para o frontend.
+   */
+  
   openAddCardModal(columnId: string): void {
     this.isModalVisible = true;
     this.currentColumnId = columnId;
@@ -331,5 +389,14 @@ export class Home implements OnInit {
   closeDeleteColumnModal(): void {
     this.isDeleteColumnModalVisible = false;
     this.columnIndexToDelete = null;
+  }
+
+  openAccountModal(event: MouseEvent): void {
+  event.stopPropagation(); 
+  this.isAccountModalVisible = true;
+}
+
+  closeAccountModal(): void {
+    this.isAccountModalVisible = false;
   }
 }

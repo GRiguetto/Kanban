@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
+import { UsersController } from './users.controller';
 
 /**
  * @Module() organiza o código relacionado à gestão de utilizadores.
@@ -20,5 +21,7 @@ import { User } from './entities/user.entity';
   // disponíveis para outros módulos que importem o UsersModule.
   // É por causa desta linha que o AuthModule consegue usar o UsersService.
   exports: [UsersService],
+
+  controllers: [UsersController],
 })
 export class UsersModule {}

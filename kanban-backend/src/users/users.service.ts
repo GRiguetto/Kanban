@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 /**
  * @Injectable() marca esta classe para ser gerida pelo sistema de
@@ -51,5 +52,29 @@ export class UsersService {
    */
   async findOneById(id: number): Promise<User | null> {
     return this.userRepository.findOne({ where: { id } });
+  }
+
+  /**
+   * 👇 ADICIONE ESTE NOVO MÉTODO 👇
+   * Atualiza os dados de um utilizador específico pela sua ID.
+   * @param id - A ID do utilizador a ser atualizado.
+   * @param updateUserDto - Os dados a serem atualizados.
+   * @returns O utilizador com os dados atualizados.
+   */
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    // O 'preload' é uma forma segura de atualizar: ele primeiro carrega a entidade
+    // existente do banco e depois mescla os novos dados do DTO.
+    const user = await this.userRepository.preload({
+      id: id,
+      ...updateUserDto,
+    });
+
+    if (!user) {
+      // Lança um erro se o utilizador não for encontrado.
+      throw new NotFoundException(`Utilizador com ID #${id} não encontrado.`);
+    }
+
+    // Salva a entidade atualizada de volta no banco de dados.
+    return this.userRepository.save(user);
   }
 }
