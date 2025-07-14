@@ -1,4 +1,4 @@
-# Projeto Kanban Full Stack (com Autenticação e Multi-Tenancy)
+# Projeto Kanban Full Stack 
 
 ## 📝 Descrição do Projeto
 
