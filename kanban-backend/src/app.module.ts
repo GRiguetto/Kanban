@@ -1,42 +1,61 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm'; 
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ColumnsModule } from './columns/columns.module';
 import { CardsModule } from './cards/cards.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import { Column } from './columns/entities/column.entity';
 import { Card } from './cards/entities/card.entity';
-import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
-import { AuthModule } from './auth/auth.module';
-
 
 @Module({
   imports: [
-    
-    TypeOrmModule.forRoot({
-      // 'type' especifica o tipo de banco de dados que estamos usando.
-      type: 'sqlite',
-      
-      // 'database' é o nome do arquivo onde o banco de dados será salvo.
-      // Ele será criado automaticamente na raiz do seu projeto backend.
-      database: 'kanban.db',
-      
-      // 'entities' diz ao TypeORM quais classes (entidades) devem ser transformadas em tabelas no banco de dados.
-      // Por enquanto, deixaremos vazio. Vamos adicionar nossas entidades nos próximos passos.
-      entities: [Column, Card, User], 
-      
-      // 'synchronize: true' é uma opção poderosa para desenvolvimento.
-      // Ele automaticamente cria e atualiza as tabelas do seu banco de dados
-      // com base nas suas classes de entidade. Nunca use em produção!
-      synchronize: true, 
+    // Regista o ConfigModule para que possamos usar variáveis de ambiente.
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+
+    // Configuração dinâmica do TypeORM.
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      // A 'useFactory' permite-nos construir a configuração dinamicamente.
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
+        
+        // Verificamos se a variável de ambiente DATABASE_URL existe.
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+
+        if (databaseUrl) {
+          // --- Configuração para Produção (PostgreSQL no Render) ---
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            entities: [Column, Card, User],
+            synchronize: true, // Para o primeiro deploy, isto é útil.
+            ssl: {
+              rejectUnauthorized: false, // Necessário para a conexão com o Heroku/Render.
+            },
+          };
+        } else {
+          // --- Configuração para Desenvolvimento (SQLite local) ---
+          return {
+            type: 'sqlite',
+            database: 'kanban.db',
+            entities: [Column, Card, User],
+            synchronize: true,
+          };
+        }
+      },
     }),
     
+    // Nossos outros módulos.
     ColumnsModule,
     CardsModule,
     UsersModule,
     AuthModule,
-
   ],
   controllers: [AppController],
   providers: [AppService],
